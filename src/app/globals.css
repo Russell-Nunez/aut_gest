@@ -1,38 +1,48 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
-  /* Light theme (default) */
-  --background: #ffffff;
-  --foreground: #000000;
-  --primary: #3b82f6;
-  --secondary: #6b7280;
-  --accent: #10b981;
-  --card-background: #f9fafb;
-  --card-foreground: #1f2937;
-  --border-color: #e5e7eb;
+  --neon-green: #39FF14;
+
+  /* Neon Dark Theme Defaults */
+  --background: #0D0D0D;
+  --foreground: #E0E0E0;
+  --primary: var(--neon-green);
+  --secondary-text: #9CA3AF; /* Tailwind gray-400 */
+  --accent: var(--neon-green); /* Using neon-green as accent */
+  --card-background: #1F2937; /* Tailwind gray-800 */
+  --card-foreground: #E0E0E0; /* Same as page foreground */
+  --border-color: var(--neon-green);
+
+  /* Font setup (assuming Geist Sans is configured in layout.tsx and tailwind.config.ts) */
+  --font-sans: 'var(--font-geist-sans)';
+  /* --font-mono: 'var(--font-geist-mono)'; /* If you use a specific mono font */
 }
 
-[data-theme="dark"] {
-  /* Dark theme */
-  --background: #1f2937;
-  --foreground: #f9fafb;
-  --primary: #60a5fa;
-  --secondary: #9ca3af;
-  --accent: #34d399;
-  --card-background: #374151;
-  --card-foreground: #f3f4f6;
-  --border-color: #4b5563;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* Apply dark mode styles when html.dark is present */
+html.dark {
+  color-scheme: dark; /* Informs the browser that the page is dark, affecting default component styling like scrollbars */
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans);
+  @apply bg-background text-foreground font-sans;
+  /* Smooth font rendering */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom utility for neon border */
+.neon-border {
+  @apply border border-border shadow-neon-sm; /* Uses --border-color (neon-green) and neon-sm shadow */
+}
+
+.animated-neon-border {
+  @apply border border-border animate-subtle-glow; /* Uses --border-color (neon-green) and subtle-glow animation */
+}
+
+/* Optional: You might want to style ::selection for a neon theme */
+::selection {
+  background-color: var(--neon-green);
+  color: var(--background); /* Or a very dark color for contrast */
 }
