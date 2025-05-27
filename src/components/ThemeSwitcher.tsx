@@ -1,45 +1,28 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { Sun, Moon } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { Moon } from 'lucide-react' // Using Moon icon as it's always dark
 
 const ThemeSwitcher = () => {
-  const [theme, setTheme] = useState('light')
+  // The state is less critical now but can be kept for consistency if needed elsewhere,
+  // though the theme is now fixed to 'dark'.
+  const [currentTheme, setCurrentTheme] = useState('dark')
 
   useEffect(() => {
-    const storedTheme = localStorage.getItem('theme')
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-
-    if (storedTheme) {
-      setTheme(storedTheme)
-    } else if (prefersDark) {
-      setTheme('dark')
-    }
-  }, [])
-
-  useEffect(() => {
-    if (theme === 'dark') {
-      document.documentElement.classList.add('dark')
-      document.documentElement.setAttribute('data-theme', 'dark')
-    } else {
-      document.documentElement.classList.remove('dark')
-      document.documentElement.setAttribute('data-theme', 'light')
-    }
-    localStorage.setItem('theme', theme)
-  }, [theme])
-
-  const toggleTheme = () => {
-    setTheme(theme === 'light' ? 'dark' : 'light')
-  }
+    // Enforce dark theme. This runs once on mount.
+    const root = window.document.documentElement
+    root.classList.remove('light') // Ensure light class is removed
+    root.classList.add('dark')     // Ensure dark class is present
+    root.setAttribute('data-theme', 'dark') // Keep data-theme for compatibility if any CSS still uses it
+    localStorage.setItem('theme', 'dark') // Persist 'dark' as the only theme
+    setCurrentTheme('dark') // Update state, though it's now static
+  }, []) // Empty dependency array means this runs once on mount
 
   return (
-    <button
-      onClick={toggleTheme}
-      className="p-2 rounded-full bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:focus:ring-offset-background"
-      aria-label="Toggle theme"
-    >
-      {theme === 'light' ? <Sun size={24} /> : <Moon size={24} />}
-    </button>
+    <div className="flex items-center space-x-2 p-2.5 rounded-lg neon-border shadow-neon-sm">
+      <Moon size={20} className="text-neon-green animate-subtle-glow" />
+      <span className="text-sm font-medium text-secondary-text">Dark Neon</span>
+    </div>
   )
 }
 
